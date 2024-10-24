@@ -7,22 +7,13 @@ image: './1200x630.png'
 authors: ['strf0x']
 ---
 
-The Cybersecurity community has been bombarded by AI hype trains for years, even before ChatGPT’s rise to fame. There were promises of magical artificial intelligence fairies that solved all our problems.
-
-In practice, many of us learned there was no easy button. It’s a game of cat-and-mouse in a field that is constantly changing, and easy buttons develop complacency, leading to a false sense of security and making our systems more opaque.
-
-For that reason, I’m not all that surprised by the skepticism I hear when talking to people in Cybersecurity about the recent advancements in AI. We’ve been burned by the hype before.
-
-This time, it feels different, but perhaps not in the way that might initially make sense.
-
-### Why The Shift?
-
-
 The Cybersecurity community has seen hype cycles around AI for years, even before ChatGPT's rise to fame. Many were promised magical solutions to all their problems.
 
 In reality, many of us learned there's no easy button. Cybersecurity is a constant game of cat-and-mouse, and relying on simple solutions can lead to complacency and a false sense of security. That’s why I understand the skepticism I hear when talking about recent AI advancements. We’ve been burned before.
 
 But this time feels different.
+
+### Why The Shift?
 
 Traditional Cybersecurity AI models relied on simpler algorithms like random forests and anomaly detection. These techniques had major drawbacks: they were slow, computationally expensive, and required large datasets for baseline establishment.
 
@@ -158,7 +149,7 @@ Later on, we'll learn why abstraction can be detrimental and we'll dig deeper in
 
 Let’s inform the model on what the zip password is:
 ```bash
-echo "the password to the vx underground zip files is 'infected' > test.txt
+echo "the password to the vx underground zip files is 'infected'" > test.txt
 ```
 
 Here the RAG code for simple-rag.py:
@@ -210,7 +201,7 @@ Now that we’ve got a working example, we need to talk about how to scale this 
 
 ### Multi-Documents, Chunking and Embedding
 
-Our example code should work fairly well, but we already have some engineering challenges. First, we used an in-memory vector store to start with, which makes it simpler to get started but won’t scale well. We should build a more permanent vector database that will survive reboots and outages.
+Our example code should work fairly well, but we already have some engineering challenges. We used an in-memory vector store for a quick test, which makes it simpler to get started but won’t scale well. We should build a more permanent vector database that will survive reboots and outages.
 
 We also have the challenge that LLMs have a fixed context length, meaning, they can only store x amount of tokens at a time before they start to fall apart. You can think about context window as a constantly shifting memory that the LLM can refer back to as your chat history grows.
 
