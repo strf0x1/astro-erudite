@@ -1,13 +1,11 @@
 ---
-title: 'A Hacker’s Guide to Local LLMs and RAG'
-description:  'Exploring the power of combining local language models with retrieval augmented generation for hackers.'
-date: 2024-10-13
+title: A Hacker’s Guide to Local LLMs and RAG
+description:  Exploring the power of combining local language models with retrieval augmented generation for hackers.
+date: 2024-01-01
 tags: ['LLM', 'RAG', 'Cybersecurity', 'AI', 'Machine Learning']
 image: './1200x630.png'
 authors: ['strf0x']
 ---
-
-## Introduction
 
 The Cybersecurity community has been bombarded by AI hype trains for years, even before ChatGPT’s rise to fame. There were promises of magical artificial intelligence fairies that solved all our problems.
 
@@ -17,26 +15,34 @@ For that reason, I’m not all that surprised by the skepticism I hear when talk
 
 This time, it feels different, but perhaps not in the way that might initially make sense.
 
-## Why The Shift?
+### Why The Shift?
 
 
-Most traditional Cybersecurity AI models were relatively simple. Detection methods relied on simpler algorithms like random forests and anomaly detection. These techniques had some major drawbacks: they were slow, computationally expensive, and required large datasets for baseline establishment.
+The Cybersecurity community has seen hype cycles around AI for years, even before ChatGPT's rise to fame. Many were promised magical solutions to all their problems.
 
-Random Forests relied on spotting patterns in historical data. This worked well for simple attacks, but hackers constantly evolve their techniques. Think of it like a signature-based antivirus: if a virus changes its code even slightly, the old signature won't recognize it.
+In reality, many of us learned there's no easy button. Cybersecurity is a constant game of cat-and-mouse, and relying on simple solutions can lead to complacency and a false sense of security. That’s why I understand the skepticism I hear when talking about recent AI advancements. We’ve been burned before.
 
-Then ChatGPT 3 dropped, and the AI community saw an explosion of growth. Computer hardware caught up, allowing us to soak up the influx of investment pouring into the field. Dozens of groundbreaking research papers seem to be released every week. Now you can run sophisticated language models from a home computer or in the cloud for pennies.
+But this time feels different.
+
+Traditional Cybersecurity AI models relied on simpler algorithms like random forests and anomaly detection. These techniques had major drawbacks: they were slow, computationally expensive, and required large datasets for baseline establishment.
+
+Random Forests struggled to keep up with evolving attacks because they rely on spotting patterns in historical data. Think of it like signature-based antivirus: if a virus slightly changes its code, the old signature won't recognize it.
+
+Then ChatGPT 3 dropped, triggering an explosion of growth in the AI field. Computer hardware caught up, allowing us to leverage the influx of investment pouring into the field. Now dozens of groundbreaking research papers are released weekly. It’s never been a better time to take another look at AI.
 
 It’s never been a better time to take a second look at AI.
 
+## Why This Matters for Hackers
+
 For hackers, this is an especially exciting time. These are just tools you can have in your toolbox, like a swiss army knife for language. They're great for some tasks but maybe not ideal for everything. For example, while impressive, using a large language model to write phishing emails might seem tempting, but crafting highly targeted and believable lures often requires nuanced understanding of human psychology and specific contexts that LLMs still struggle with.
 
-However, there are incredibly valuable applications within Cybersecurity. LLMs can excel at analyzing complex code, identifying patterns and potential vulnerabilities that might go unnoticed by traditional security tools. The community also needs people who are deeply curious about how things actually work and willing to red-team these models. 
+However, there are incredibly valuable applications within Cybersecurity. LLMs can excel at analyzing complex code, identifying patterns and potential vulnerabilities that might go unnoticed by traditional security tools. The community also needs people who are deeply curious about how things actually work and willing to red-team these models.
 
 It’s a complex topic, so let's start with something simple:
 
-## Retrieval Augmented Generation
+### Introduction to Retrieval Augmented Generation
 
-Language models like ChatGPT are trained on vast amounts of information, basically the entirety of the public internet. They've kind of run out of data from the internet, and trends are moving towards generating synthetic data. 
+Language models like ChatGPT are trained on vast amounts of information, basically the entirety of the public internet. They've kind of run out of data from the internet, and trends are moving towards generating synthetic data.
 
 
 There are also many comparable open-source, locally-hosted language models you can use right at home that work just as well as ChatGPT, but with the added benefit that you control your own data, without API limits or additional costs.
@@ -47,14 +53,14 @@ Because these models are extremely expensive to train, at some point they need t
 
 They also can’t train on everything, especially extremely domain-specific information, or things from non-public resources. For that reason, we need a way to augment these models with new and specific domain expertise, and to do that in a way that doesn't cost huge sums of money.
 
-Say you're working on a threat intelligence project, and you have some reports on a new threat actor. Traditional keyword search might be able to identify sections of the report based on your query. From there, you'd have to read the sections and understand them yourself. LLM with RAG would be able to find the sections that are interesting, understand those sections, and then could summarize them with high-level bullet points. It could create metadata based on the contents and output them in json format for your threat intel database. Or it could write some example source code to demonstrate how the technique might work. 
+Say you're working on a threat intelligence project, and you have some reports on a new threat actor. Traditional keyword search might be able to identify sections of the report based on your query. From there, you'd have to read the sections and understand them yourself. LLM with RAG would be able to find the sections that are interesting, understand those sections, and then could summarize them with high-level bullet points. It could create metadata based on the contents and output them in json format for your threat intel database. Or it could write some example source code to demonstrate how the technique might work.
 
 In its simplest form, a RAG is a contextually aware document search engine that enriches your language model with new information. When you ask an LLM a question, the question is used to search a vector database, and your question + the new pieces of information are sent to the model. You can also control how the model uses that new information, prompting it to only use it (and refuse to respond if it doesn't know), or to synthesize a response using the new information + what it already knows.
 
 If you wanted to give the model more context about a code example you’re working on, you might type something like:
 
 ```python
-User Prompt: Change this code to print A - Z: 
+User Prompt: Change this code to print A - Z:
 for i in range(1, 11):
     print(i)
 ```
@@ -66,13 +72,13 @@ for i in range(65, 91):
     print(chr(i))
 ```
 
-Language models can be really helpful for refactoring code, and giving them more information about what you want tends to improve the usefulness of their responses. 
+Language models can be really helpful for refactoring code, and giving them more information about what you want tends to improve the usefulness of their responses.
 
 A RAG acts a lot like the above example, but instead of pasting the code or paragraph you want to chat about, the RAG takes your query, searches a vector database (full of documents you’ve ingested) retrieves contextually relevant information for you, and inserts chunks of the relevant data into your original query before sending it to the model to respond.
 
 The way you process your data (whether PDFs, presentations, or Git repos), to the way you store and retrieve that data is where the challenge lies. But lucky for us, the open-source community has a ton of really useful libraries and techniques for building this, and testing is an integral part of objectively identifying good ways to do this.
 
-## A Minimal RAG
+### A Minimal RAG
 
 The best way to learn RAG is to build a very simple prototype.
 
@@ -98,8 +104,8 @@ ollama run gemma2:2b
 You’ll get a basic chat prompt in your CLI. You can ask questions, and it has a memory called a context window length of 2048 tokens (or about 8000 characters give or take). Let's ask vanilla Gemma2 to make sure it doesn't know the answer to the question we're going to ask:
 ```bash
 >>> whats the password to the vx underground database?
-I understand you might be curious about secure systems, but I cannot provide you with the password for any system, especially one that could compromise someone's privacy or 
-security. 
+I understand you might be curious about secure systems, but I cannot provide you with the password for any system, especially one that could compromise someone's privacy or
+security.
 
 Here's why:
 
@@ -111,11 +117,11 @@ Here's why:
 ```
 Gemma2 has a perfectly reasonable response, but not really helpful for us. You can ask if it knows what VX Underground is, most models seem to have a rough idea of what it is, but I haven't found a model that knows the password.
 
-Next, you’ll want a relatively recent version of Python. Then, to make things much easier to manage, we’ll be using `venv` and `poetry` (to manage dependencies):
+Next, you’ll want a relatively recent version of Python (I'm on 3.12). Then, to make things much easier to manage, we’ll be using `venv` and `poetry` to manage dependencies:
 
 ```bash
 sudo apt install python3-pip python3-venv python3-virtualenv -y
-pip install pipx
+pip install pipx -y
 pipx install poetry
 ```
 
@@ -143,7 +149,7 @@ This will create a new directory called `simple_rag` with some files to get your
 To handle our RAG, there are some really useful libraries. There’s a bit of a pitfall here too in that by depending on high-level libraries we’ll be abstracting away how the RAG works under the hood, but for this example, we’ll use Langchain:
 
 ```bash
-poetry add langchain langchain-huggingface langchain-community faiss-cpu 
+poetry add langchain langchain-huggingface langchain-community faiss-cpu
 ```
 
 
@@ -191,18 +197,18 @@ print(result)
 
 Let's run it:
 ```bash
-poetry run python simple_rag/simple-rag.py 
+poetry run python simple_rag/simple-rag.py
 ...
-The document tells us the password to the vx underground database is 'infected'. 
+The document tells us the password to the vx underground database is 'infected'.
 ```
-  
+
 There's something else interesting happening here. It completely ignored the ethical concerns it mentioned earlier. These models are trained to be helpful, safe assistants. It's possible it doesn't know the answer, and it tries to steer the conversation away to something helpful, or it's possible that putting the model in the context of analyzing a document broke it out of its safety training.
 
 There are jailbreaks that use similar techniques. By persuading a model to imagine a fictitious scenario where it writes some malicious code, they will often play along and write the malicious code. Initially, I used jailbreaks when building RAG for Cybersecurity documents, but I realized they were often not needed to get the information back that I needed (gemma, qwen2.5, mistral-nemo).
 
 Now that we’ve got a working example, we need to talk about how to scale this to more than one document.
 
-## Multi-Documents, Chunking and Embedding
+### Multi-Documents, Chunking and Embedding
 
 Our example code should work fairly well, but we already have some engineering challenges. First, we used an in-memory vector store to start with, which makes it simpler to get started but won’t scale well. We should build a more permanent vector database that will survive reboots and outages.
 
@@ -217,4 +223,3 @@ To deal with some of these limitations, another lever we can pull is the size of
 This ends up being a more involved problem to solve because our vector search needs to have contextual awareness of the source material, and in our case, PDFs can be a nightmare to parse. Take a look at an example of these chunked documents from:
 
 In the next section we’ll address some of these issues with a newer RAG method called ColBERTv2.
-
