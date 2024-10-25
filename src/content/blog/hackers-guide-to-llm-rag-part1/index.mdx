@@ -31,12 +31,9 @@ For example, while impressive, using a large language model to write phishing em
 
 However, there are incredibly valuable applications within Cybersecurity. LLMs can excel at analyzing complex code, identifying patterns and potential vulnerabilities that might go unnoticed by traditional security tools. The community also needs people who are deeply curious about how things actually work and willing to redteam these models.
 
-It’s a complex topic, so let's start with something simple:
-
 ### Introduction to Retrieval Augmented Generation
 
 Language models like ChatGPT are trained on vast amounts of information, basically the entirety of the public internet. They've kind of run out of data from the internet, and trends are moving towards generating synthetic data.
-
 
 There are many comparable open-source, locally-hosted language models you can use right at home that work just as well as ChatGPT, but with the added benefit that you control your own data, without API limits or additional costs.
 
@@ -46,11 +43,57 @@ Because these models are extremely expensive to train, at some point they need t
 
 These models are broadly general-purpose. They don’t train on everything, especially extremely domain-specific information, or things from non-public resources. For that reason, we need a way to augment these models with new and specific domain expertise, and to do that in a way that doesn't cost huge sums of money.
 
-Say you're working on a threat intelligence project, and you have some reports on a new threat actor. Traditional keyword search might be able to identify sections of the report based on your query. From there, you'd have to read the sections and understand them yourself. LLM with RAG would be able to find the sections that are interesting, understand those sections, and then could summarize them with high-level bullet points. It could create metadata based on the contents and output them in json format for your threat intel database. Or it could write some example source code to demonstrate how the technique might work.
+Say you're working on a threat intelligence project, and you have some reports on a new threat actor. Traditional keyword search might be able to identify sections of the report based on your query. From there, you'd have to read the sections and understand them yourself. LLM's with RAG can take something like [this](https://thedfirreport.com/2024/08/12/threat-actors-toolkit-leveraging-sliver-poshc2-batch-scripts/) and turn it into json like this:
+
+```json model=qwen2.5-70b
+{
+  "report_title": "Threat Actors’ Toolkit: Leveraging Sliver, PoshC2 & Batch Scripts",
+  "date": "August 12, 2024",
+  "key_findings": [
+    "Threat actors are increasingly using sophisticated tools and scripts to execute attacks.",
+    "The combination of Sliver, PoshC2, and batch scripts provides a robust toolkit for advanced threat operations."
+  ],
+  "tools_used": [
+    "Sliver - A cross-platform post-exploitation agent used for maintaining access and executing commands on compromised systems.",
+    "PoshC2 - A PowerShell command and control framework that allows for stealthy communication with compromised hosts.",
+    "Batch Scripts - Simple yet effective scripts used to automate tasks and maintain persistence."
+  ],
+  "indicators_of_compromise": [
+    "Network traffic to known C2 servers using encrypted channels.",
+    "Unusual PowerShell activity or execution of scripts from unusual locations.",
+    "Persistence mechanisms such as registry keys, scheduled tasks, or startup items that execute batch scripts."
+  ]
+}
+```
+Or maybe you'd like some Sigma rules to start writing detections? This is a a little basic, but LLMs can be useful for getting started with a new project:
+
+```yaml model=qwen2.5-70b
+title: Detect Creation or Modification of Suspicious Batch Scripts
+id: 5c6d7e8f-0a1b-4c3d-a2e4-f56g7h8i9j0k
+status: experimental
+description: Detects the creation or modification of batch scripts in suspicious locations, which could indicate malicious activity.
+author: Your Name
+date: 2023/10/05
+logsource:
+    category: file_event
+    product: windows
+detection:
+    selection:
+        - file.name|endswith: .bat
+        - file.path|contains: 'AppData'
+    condition: selection
+fields:
+    - user
+    - process.name
+    - file.path
+falsepositives:
+    - Legitimate batch scripts used for automation
+level: medium
+```
 
 In its simplest form, a RAG is a contextually aware document search engine that enriches your language model with new information. When you ask an LLM a question, the question is used to search a vector database, and your question + the new pieces of information are sent to the model. You can also control how the model uses that new information, prompting it to only use it (and refuse to respond if it doesn't know), or to synthesize a response using the new information + what it already knows.
 
-If you wanted to give the model more context about a code example you’re working on, you might type something like:
+If you wanted to give the model more context about a code example you’re working on, you might type something like this:
 
 ```python
 User Prompt: Change this code to print A - Z:
@@ -92,7 +135,7 @@ ollama run gemma2:2b
 ```
 
 You’ll get a basic chat prompt in your CLI. You can ask questions, and it has a memory called a context window length of 2048 tokens (or about 8000 characters give or take). Let's ask vanilla Gemma2 to make sure it doesn't know the answer to the question we're going to ask:
-```bash
+```bash model=gemma2:2b
 >>> whats the password to the vx underground database?
 I understand you might be curious about secure systems, but I cannot provide you with the password for any system, especially one that could compromise someone's privacy or
 security.
@@ -184,7 +227,7 @@ echo "the password to the vx underground zip files is 'infected'" > test.txt
 ```
 
 Run it:
-```bash
+```bash model=gemma2:2b
 poetry run python simple_rag/simple-rag.py
 ...
 The document tells us the password to the vx underground database is 'infected'.
