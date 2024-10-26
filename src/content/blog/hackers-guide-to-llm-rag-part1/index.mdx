@@ -50,7 +50,7 @@ print(html_block)
 
 But crafting highly targeted and believable lures often requires nuanced understanding of human psychology and specific contexts that LLMs still struggle with.
 
-However, they excel at other tasks like code analysis, pattern identification, and converting unstructured data into structured formats.
+However, they excel at other tasks like code analysis, pattern identification, and converting unstructured data into structured formats like json.
 
 ### Understanding Retrieval Augmented Generation
 
@@ -62,7 +62,7 @@ These models do have limitations. Training cutoff dates mean they might miss rec
 
 Consider working with threat intelligence reports. Traditional keyword searches might help locate relevant sections, but RAG can help transform reports like this one into structured data:
 
-```json model=qwen2.5-70b
+```json title=qwen2.5-70b
 {
   "report_title": "Threat Actors’ Toolkit: Leveraging Sliver, PoshC2 & Batch Scripts",
   "date": "August 12, 2024",
@@ -84,7 +84,7 @@ Consider working with threat intelligence reports. Traditional keyword searches 
 ```
 RAG can also assist in creating initial detection rules. While these might need refinement, they provide a useful starting point:
 
-```yaml model=qwen2.5-70b
+```yaml title=qwen2.5-70b
 title: Detect Creation or Modification of Suspicious Batch Scripts
 id: 5c6d7e8f-0a1b-4c3d-a2e4-f56g7h8i9j0k
 status: experimental
@@ -128,7 +128,7 @@ ollama run gemma2:2b
 You’ll get a basic chat prompt in your CLI. You can ask questions, and it has a memory called a context window length of 2048 tokens (or about 8000 characters give or take).
 
 Let's ask vanilla Gemma2 to make sure it doesn't know the answer to the question we're going to ask:
-```bash model=gemma2:2b
+```bash title=gemma2:2b
 >>> whats the password to the vx underground database?
 I understand you might be curious about secure systems, but I cannot provide you with the password for any system, especially one that could compromise someone's privacy or
 security.
@@ -216,7 +216,7 @@ echo "the password to the vx underground zip files is 'infected'" > test.txt
 ```
 
 Run it:
-```bash model=gemma2:2b
+```bash title=gemma2:2b
 poetry run python simple_rag/simple-rag.py
 ...
 The document tells us the password to the vx underground database is 'infected'.
