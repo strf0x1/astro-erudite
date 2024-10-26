@@ -258,7 +258,7 @@ There are jailbreaks that use similar techniques. By persuading a model to imagi
 
 Now that we’ve got a working example, we need to talk about how to scale this to more than one document.
 
-### Multi-Documents, Chunking and Embedding
+### Multiple Documents and Context Length
 
 Our example code should work fairly well, but we already have some engineering challenges. We used an in-memory vector store for a quick test, which makes it simpler to get started but won’t scale well. We should build a more permanent vector database that will survive reboots and outages.
 
