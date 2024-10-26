@@ -186,11 +186,11 @@ To make a new project driven by Poetry:
 ```bash
 poetry new simple_rag
 cd simple_rag
-python -m venv simple-rag
+python -m venv simple-rag env
 source env/bin/activate
 ```
 
-This will create a new directory called `simple_rag` with some files to get your project started:
+Poetry will create a new directory called `simple_rag` with some files to get your project started:
 
 ```bash
 ├── README.md
@@ -201,15 +201,11 @@ This will create a new directory called `simple_rag` with some files to get your
     └── __init__.py
 ```
 
-
-To handle our RAG, there are some really useful libraries. There’s a bit of a pitfall here too in that by depending on high-level libraries we’ll be abstracting away how the RAG works under the hood, but for this example, we’ll use Langchain:
+To handle our RAG, we'll Langchain, a library that abstracts away some of the details of building a RAG to make it simple:
 
 ```bash
 poetry add langchain langchain-huggingface langchain-community faiss-cpu
 ```
-
-
-Later on, we'll learn why abstraction can be detrimental and we'll dig deeper into an alternate approach. It’s not that LLamaIndex and Langchain are bad tools, but they offer convenience while sacrificing control.
 
 Here's the RAG code (simple-rag/simple-rag/simple-rag.py):
 ```python
