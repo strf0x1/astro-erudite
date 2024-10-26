@@ -148,14 +148,16 @@ First, we need to run a local model and test it works. [Ollama](https://ollama.c
 curl -fsSL https://ollama.com/install.sh | sh
 ```
 
-Then pull down a small local model and test it:
+Then pull down a small model and test it:
 
 ```bash
 systemctl restart ollama
 ollama run gemma2:2b
 ```
 
-You’ll get a basic chat prompt in your CLI. You can ask questions, and it has a memory called a context window length of 2048 tokens (or about 8000 characters give or take). Let's ask vanilla Gemma2 to make sure it doesn't know the answer to the question we're going to ask:
+You’ll get a basic chat prompt in your CLI. You can ask questions, and it has a memory called a context window length of 2048 tokens (or about 8000 characters give or take).
+
+Let's ask vanilla Gemma2 to make sure it doesn't know the answer to the question we're going to ask:
 ```bash model=gemma2:2b
 >>> whats the password to the vx underground database?
 I understand you might be curious about secure systems, but I cannot provide you with the password for any system, especially one that could compromise someone's privacy or
