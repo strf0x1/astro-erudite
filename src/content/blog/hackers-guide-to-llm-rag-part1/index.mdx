@@ -1,26 +1,25 @@
 ---
-title: Local LLM's and RAG for Hackers
+title: Local LLM's and RAG for Cybersecurity Researchers
 description:  Exploring the power of combining local language models with retrieval augmented generation for hackers.
 date: 2024-10-25
 tags: ['LLM', 'RAG', 'Cybersecurity', 'AI', 'Machine Learning']
 image: './1200x630.png'
 authors: ['strf0x']
 ---
-### Build Your Own Knowledgebase
+### Building Your Own Knowledgebase
 
-The Cybersecurity community has seen hype cycles around AI for years. In reality, many of us learned there is no easy button. In cybersecurity, relying on simple solutions can lead to complacency and a false sense of security. I understand the skepticism I hear when talking about recent AI advancements. We’ve been burned before.
-
+The cybersecurity community has seen many AI hype cycles over the years, often leading to skepticism when new AI technologies emerge. This skepticism is well-earned – we've learned that there's rarely an easy button in security, and simple solutions can create dangerous blind spots.
 But this time feels a little different.
 
-Imagine for a moment, a vast, privately curated knowledgebase that you control and use. It could be like a second brain or an evolution of note-taking software. By the end of part 2 of this series, we’ll have something like that you can build to work the way you want it to work, with your privately collected data.
+Yet with recent developments in AI, particularly in local language models and retrieval systems, offer some genuinely practical tools for researchers. We'll explore how to build something useful: a private, customizable knowledge base that works the way you need it to work.
 
-### Writing Your Own Tools with Local LLMs
+### Working with Local LLMs
 
-For hackers, this is an especially exciting time. These are just tools you can have in your toolbox, like a swiss army knife for your data.
+Local Language Models (LLMs) represent an interesting addition to a security researcher's toolkit. While they're not a silver bullet, they can be particularly effective for specific tasks when used thoughtfully.
 
 They're also great for some tasks but maybe not ideal for everything, so they shouldn't be looked at as another easy button.
 
-For example, you could write phishing emails with python and [ollama](https://ollama.com/). It could even dynamically generate parts of the html:
+For instance, you could use Python and [ollama](https://ollama.com/) to analyze potential phishing content. Here's a simple example:
 
 ```python
 import ollama
@@ -52,21 +51,17 @@ print(html_block)
 
 But crafting highly targeted and believable lures often requires nuanced understanding of human psychology and specific contexts that LLMs still struggle with.
 
-However, there are incredibly valuable applications too. LLMs can analyze code, identify patterns and refactor. They can also turn unstructured data into json relatively well.
+However, they excel at other tasks like code analysis, pattern identification, and converting unstructured data into structured formats.
 
-### Retrieval Augmented Generation
+### Understanding Retrieval Augmented Generation
 
-Language models like ChatGPT are trained on vast amounts of information, basically the entirety of the public internet. They've kind of run out of data, and trends are moving towards generating synthetic data.
+Language models like ChatGPT are trained on vast amounts of public data. However, their training data eventually becomes outdated, and they lack access to specialized or private information. This is where open-source, local language models become valuable – they provide similar capabilities while giving you control over your data, without API limits or additional costs.
 
-There are many open-source, local language models you can use right at home that work just as well as ChatGPT, but with the added benefit that you control your own data, without API limits or additional costs.
+A huge community has grown around this idea of open-source AI, my favourite communities being [Hugging Face](https://huggingface.co/) and Reddit's [/r/LocalLLaMA](https://www.reddit.com/r/LocalLLaMA/). This approach offers transparency about model training that proprietary solutions often lack.
 
-A huge community has grown around this idea of open-source AI, my favourite communities being [Hugging Face](https://huggingface.co/) and Reddit's [/r/LocalLLaMA](https://www.reddit.com/r/LocalLLaMA/). This is in stark contrast to OpenAI’s ChatGPT, where we have no idea how it was trained, or if they’re just building a giant surveillance engine with our personal data.
+These models do have limitations. Training cutoff dates mean they might miss recent developments – for instance, Anthropic's Claude has a training cutoff around March 2024. They also might not include specialized documentation or private research. This is where Retrieval Augmented Generation (RAG) becomes useful.
 
-Because these models are extremely expensive to train, at some point they need to ship their model. The training cutoff for data from Anthropic's Claude is roughly March 2024 at the time of this writing. So any new programming language documentation might not be included. If you're using it to write code, it might not know about deprecated functions or new features available in the library you're using.
-
-These models are broadly general-purpose. They'll be missing extremely domain-specific information, or things from non-public resources. For that reason, we need a way to augment these models with new and specific domain expertise, and to do that in a way that doesn't cost huge sums of money.
-
-Say you're working on a threat intelligence project, and you have some reports on a new threat actor. Traditional keyword search might be able to identify sections of the report based on your query. From there, you'd have to read the sections and understand them yourself. LLM's with RAG can take something like [this](https://thedfirreport.com/2024/08/12/threat-actors-toolkit-leveraging-sliver-poshc2-batch-scripts/) and turn it into json like this:
+Consider working with threat intelligence reports. Traditional keyword searches might help locate relevant sections, but RAG can help transform reports like this one into structured data:
 
 ```json model=qwen2.5-70b
 {
@@ -88,7 +83,7 @@ Say you're working on a threat intelligence project, and you have some reports o
   ]
 }
 ```
-Or maybe you'd like some Sigma rules to start writing detections? This is a little basic, but LLMs can be useful for getting started with a new project:
+RAG can also assist in creating initial detection rules. While these might need refinement, they provide a useful starting point:
 
 ```yaml model=qwen2.5-70b
 title: Detect Creation or Modification of Suspicious Batch Scripts
@@ -114,35 +109,11 @@ falsepositives:
 level: medium
 ```
 
-In its simplest form, a RAG is a contextually aware document search engine that enriches your language model with new information. When you ask an LLM a question, the question is used to search a vector database, and your question + the new pieces of information are sent to the model. You can also control how the model uses that new information, prompting it to only use it (and refuse to respond if it doesn't know), or to synthesize a response using the new information + what it already knows.
+At its core, RAG enhances your language model by providing it with contextually relevant information from your document collection. When you ask a question, RAG searches a vector database, combines relevant information with your query, and helps the model provide more informed responses.
 
-If you wanted to give the model more context about a code example you’re working on, you might type something like this:
+### Building a RAG
 
-```python
-User Prompt: Change this code to print A - Z:
-for i in range(1, 11):
-    print(i)
-```
-
-For which the model might respond:
-
-```python
-for i in range(65, 91):
-    print(chr(i))
-```
-
-Language models can be really helpful for refactoring code, and giving them more information about what you want tends to improve the usefulness of their responses.
-
-A RAG acts a lot like the above example, but instead of pasting the code or paragraph you want to chat about, the RAG takes your query, searches a vector database (full of documents you’ve ingested) retrieves contextually relevant information for you, and inserts chunks of the relevant data into your original query before sending it to the model to respond.
-
-The way you process your data (whether PDFs, presentations, or Git repos), to the way you store and retrieve that data is where the challenge lies. But lucky for us, the open-source community has a ton of really useful libraries and techniques for building this, and testing is an integral part of objectively identifying good ways to do this.
-
-### Minimal RAG
-
-There are several canned solutions that you could achieve this with, but then, we wouldn't be learning how things work!
-
-
-First, we need to run a local model and test it works. [Ollama](https://ollama.com/) is one of the easier ways to get a local model running and it’s cross-platform so you can run it on Mac, Linux or Windows. Navigate to their site and follow the instructions for your operating system. I run Ubuntu Linux 24.04:
+While there are pre-built solutions available, building a simple RAG system helps understand the underlying concepts. Let's start with setting up a local model using [Ollama](https://ollama.com/), which works across Mac, Windows and Linux. I'm on Ubuntu 24.04:
 
 ```bash
 curl -fsSL https://ollama.com/install.sh | sh
