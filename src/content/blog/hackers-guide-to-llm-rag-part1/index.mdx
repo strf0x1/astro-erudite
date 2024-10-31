@@ -18,11 +18,20 @@ LLMs represent an interesting addition to a security researcher's toolkit. While
 
 They excel at tasks like code analysis, pattern identification, and converting unstructured data into structured formats like json.
 
+LLMs are easy to work with in python. With a few lines of code, you can have an LLM chatting back and forth with your code:
+
+```python
+import ollama
+
+response = ollama.generate(model='gemma2:2b', prompt='what is a qubit?')
+print(response['response'])
+```
+
 ### Understanding Retrieval Augmented Generation
 
 Language models like ChatGPT are trained on vast amounts of public data. However, their training data eventually becomes outdated, and they lack access to specialized or private information. This is where open-source, local language models become valuable – they provide similar capabilities while giving you control over your data, without API limits or additional costs.
 
-A huge community has grown around this idea of open-source AI, my favourite communities being [Hugging Face](https://huggingface.co/) and Reddit's [/r/LocalLLaMA](https://www.reddit.com/r/LocalLLaMA/). This approach offers transparency about model training that proprietary solutions often lack.
+A huge community has grown around this idea of open-source AI, my favourite communities being [Hugging Face](https://huggingface.co/) and Reddit's [/r/LocalLLaMA](https://www.reddit.com/r/LocalLLaMA/). This approach embodies the open-source community's core values of transparency and collaborative development.
 
 These models do have limitations. Training cutoff dates mean they might miss recent developments – for instance, Anthropic's Claude has a training cutoff around March 2024. They also might not include specialized documentation or private research. This is where Retrieval Augmented Generation (RAG) becomes useful.
 
